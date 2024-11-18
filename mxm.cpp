@@ -409,17 +409,14 @@ int main(int argc, char **argv) {
     runKernel(op.localWorkThreads);
     auto end_time = chrono::high_resolution_clock::now();
 
-    if (i == 0) {
-      writeTime = getTime(writeEvent1);
-      writeTime += getTime(writeEvent2);
-    }
+    writeTime = getTime(writeEvent1);
+    writeTime += getTime(writeEvent2);
+
     kernelTime = getTime(kernelEvent);
     readTime = getTime(readEvent1);
 
     kernelTimers.push_back(kernelTime);
-    if (i == 0) {
-      writeTimers.push_back(writeTime);
-    }
+    writeTimers.push_back(writeTime);
     readTimers.push_back(readTime);
 
     double total =
