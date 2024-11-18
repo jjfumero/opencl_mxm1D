@@ -232,7 +232,7 @@ int writeBuffer() {
 
 void runKernel(int localWorkThreads) {
   cl_int status;
-  status = clSetKernelArg(kernel, 0, sizeof(cl_mem), &d_kcontext);
+  status =  clSetKernelArg(kernel, 0, sizeof(cl_mem), &d_kcontext);
   status |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &d_A);
   status |= clSetKernelArg(kernel, 2, sizeof(cl_mem), &d_B);
   status |= clSetKernelArg(kernel, 3, sizeof(cl_mem), &d_C);
@@ -396,13 +396,14 @@ int main(int argc, char **argv) {
     writeTime = 0;
     readTime = 0;
 
+	kernelEvent = nullptr;
+	writeEvent1 = nullptr;
+	writeEvent2 = nullptr;
+	readEvent1 = nullptr;
+
     auto start_time = chrono::high_resolution_clock::now();
 
-    // Copy only the first run (host -> device) to simulate what TornadoVM does.
-    // Otherwise, commment out the if-statement
-    if (i == 0) {
-      writeBuffer();
-    }
+    writeBuffer();
 
     // Run kernel also includes the device -> host transfer
     runKernel(op.localWorkThreads);
