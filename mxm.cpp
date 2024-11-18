@@ -213,9 +213,9 @@ cl_int allocateBuffersOnGPU() {
 
 int writeBuffer() {
     cl_int status;
-	status = clEnqueueWriteBuffer(commandQueue, d_A, CL_TRUE, 0, datasize, A, 0, NULL, &writeEvent1);
-	status |= clEnqueueWriteBuffer(commandQueue, d_B, CL_TRUE, 0, datasize, B, 0, NULL, &writeEvent2);
-	status |= clEnqueueWriteBuffer(commandQueue, d_kcontext, CL_TRUE, 0, sizeof(KernelContext_t) * elements, kcontext, 0, NULL, NULL);
+	status = clEnqueueWriteBuffer(commandQueue, d_A, CL_FALSE, 0, datasize, A, 0, NULL, &writeEvent1);
+	status |= clEnqueueWriteBuffer(commandQueue, d_B, CL_FALSE, 0, datasize, B, 0, NULL, &writeEvent2);
+	status |= clEnqueueWriteBuffer(commandQueue, d_kcontext, CL_FALSE, 0, sizeof(KernelContext_t) * elements, kcontext, 0, NULL, NULL);
     return status;
 }
 
@@ -385,9 +385,13 @@ int main(int argc, char **argv) {
 		readTime = 0;
 
 	    auto start_time = chrono::high_resolution_clock::now();
+
+		// Copy only the first run (host -> device) to simulate what TornadoVM does.
+		// Otherwise, commment out the if-statement
         if (i == 0) {
             writeBuffer();
         }
+		
 		runKernel(op.localWorkThreads);
 	  	auto end_time = chrono::high_resolution_clock::now();
 
