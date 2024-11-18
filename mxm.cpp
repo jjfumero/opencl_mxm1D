@@ -391,7 +391,8 @@ int main(int argc, char **argv) {
         if (i == 0) {
             writeBuffer();
         }
-		
+
+		// Run kernel also includes the device -> host transfer
 		runKernel(op.localWorkThreads);
 	  	auto end_time = chrono::high_resolution_clock::now();
 
