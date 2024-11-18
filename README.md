@@ -19,8 +19,8 @@ make
 ```bash
 ./mxm -h
 Options: 
-	 -p <number>       Select an OpenCL Platform Number
-	 -s <size>         Select input matrix size
+	 -p <number>       Select an OpenCL Platform Number. The device will be device 0 from the selected platform.
+	 -s <size>         Select input matrix size (size x size )
 	 -k <kernel name>  Input Kernel < mxm1D_private | mxm1D_struct_array | mxm1D_struct >
 	 -w <nThreads>     Select local work group size <nThreads x nThreads>. If not selected, then it sets to NULL
 	 -f                Apply optimizations in the compiler flags when building the kernel (-cl-mad-enable -cl-fast-relaxed-math -w)
