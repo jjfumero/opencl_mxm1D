@@ -242,7 +242,7 @@ void runKernel(int localWorkThreads) {
   size_t globalWorkSize[1];
   globalWorkSize[0] = elements;
   // std::cout << "GWG: " << globalWorkSize[0] << std::endl;
-  cl_event waitEventsKernel[] = {writeEvent1, writeEvent2};
+  cl_event waitEventsForKernel[] = {writeEvent1, writeEvent2};
 
   size_t localWorkGroup[1];
   if (localWorkThreads > 0) {
@@ -258,8 +258,8 @@ void runKernel(int localWorkThreads) {
       globalWorkSize,                                  // total num threads
       (localWorkThreads != 0) ? localWorkGroup : NULL, // localWorkGroup
       2,                                               // num events to wait
-      waitEventsKernel, // array with wait event objects
-      &kernelEvent);    // kernel event
+      waitEventsForKernel,                             // array with wait event objects
+      &kernelEvent);                                   // kernel event
   if (status != CL_SUCCESS) {
     std::cout << "Error in clEnqueueNDRangeKernel: " << status << std::endl;
     return;
@@ -268,9 +268,8 @@ void runKernel(int localWorkThreads) {
   kernelTime = getTime(kernelEvent);
 
   // Read result back from device to host
-  cl_event waitEventsRead[] = {kernelEvent};
-  clEnqueueReadBuffer(commandQueue, d_C, CL_TRUE, 0, datasize, C, 1,
-                      waitEventsKernel, &readEvent1);
+  cl_event waitEventsForRead[] = { kernelEvent };
+  clEnqueueReadBuffer(commandQueue, d_C, CL_TRUE, 0, datasize, C, 1, waitEventsForRead, &readEvent1);
 }
 
 void freeMemory() {
